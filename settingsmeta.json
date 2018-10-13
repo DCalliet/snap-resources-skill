@@ -3,15 +3,21 @@
     "skillMetadata": {
         "sections": [
             {
-                "name": "Assigned Notification Email",
+                "name": "Internal Notification Email",
                 "fields": [
-                    {
-                        "name": "internal_communications_email_address",
-                        "type": "text",
-                        "label": "Setting Email Address to Receive Reports",
-                        "value": "",
-                        "placeholder": "example@email.com"
-                    }
+                  {
+                      "name": "send_report_on_completion",
+                      "type": "checkbox",
+                      "label": "Send Internal Email on Completed Reports",
+                      "value": "true"
+                  },
+                  {
+                      "name": "internal_communications_email_address",
+                      "type": "text",
+                      "label": "Internal Email Address to Receive Reports",
+                      "value": "",
+                      "placeholder": "example@email.com"
+                  }
                 ]
             }
           ]
