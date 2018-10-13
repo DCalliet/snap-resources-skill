@@ -14,7 +14,7 @@ class SnapResourceSkill(MycroftSkill):
 
     @intent_file_handler('snap.eligibility.intent')
     def handle_resources_snap(self, message):
-        self.speak_dialogue('snap.eligibility')
+        self.speak_dialog('snap.eligibility')
         wait_while_speaking()
         eligibility_info = self.ask_yesno('snap.more.info')
         wait_while_speaking()
@@ -33,11 +33,11 @@ class SnapResourceSkill(MycroftSkill):
                     wait_while_speaking()
 
                     if self.income:
-                        self.speak_dialogue('generic.yes')
+                        self.speak_dialog('generic.yes')
                     else:
-                        self.speak_dialogue('generic.no')
+                        self.speak_dialog('generic.no')
         else:
-            self.speak_dialogue('here.to.assist')
+            self.speak_dialog('here.to.assist')
             wait_while_speaking()
 
 def create_skill():
