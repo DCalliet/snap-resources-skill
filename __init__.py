@@ -9,14 +9,9 @@ class SnapResources(MycroftSkill):
     def __init__(self):
         MycroftSkill.__init__(self)
 
-    @intent_file_handler('green.card.intent')
+    @intent_file_handler('')
     def handle_resources_citizenship(self, message):
-        self.speak_dialog('green.card.eligibility')
-        eligibility_info = self.ask_yesno('eligibility.more.info')
-        if eligibility_info == 'yes':
-            self.speak_dialog('list.eligibility')
-        else:
-            self.speak_dialog('here.to.assist')
+        pass
 
 
 def create_skill():
