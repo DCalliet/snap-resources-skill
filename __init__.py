@@ -5,7 +5,7 @@ from mycroft.audio import wait_while_speaking
 from mycroft.skills.context import *
 
 
-class SnapResources(MycroftSkill):
+class SnapResourceSkill(MycroftSkill):
     '''
         This skill has a dialogue for determining snap eligibility.
     '''
@@ -41,4 +41,4 @@ class SnapResources(MycroftSkill):
             wait_while_speaking()
 
 def create_skill():
-    return SnapResources()
+    return SnapResourceSkill()
