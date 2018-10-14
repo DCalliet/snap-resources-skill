@@ -17,8 +17,40 @@
                       "label": "Internal Email Address to Receive Reports",
                       "value": "",
                       "placeholder": "example@email.com"
-                  }
+                  },
                 ]
+            },
+            {
+              "name": "Twilio Integration",
+              "fields": [
+                {
+                  "name": "twilio_integration_enabled",
+                  "type": "checkbox",
+                  "label": "Twillio Integration Enabled",
+                  "value": "true"
+                },
+                {
+                  "name": "twilio_api_base_url",
+                  "type": "text",
+                  "label": "Base Url For Twilio Api",
+                  "value": "https://api.twilio.com/2010-04-01"
+                },
+                {
+                  "name": "twilio_account_sid",
+                  "type": "text",
+                  "label": "Twilio Account SID"
+                },
+                {
+                  "name": "twilio_auth_token",
+                  "type": "text",
+                  "label": "Twilio Auth Token"
+                },
+                {
+                  "name": "twilio_from_number",
+                  "type": "text",
+                  "label": "Outgoing Phone Number"
+                }
+              ]
             }
           ]
       }
