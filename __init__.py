@@ -85,17 +85,17 @@ class SnapResourceSkill(MycroftSkill):
 
                 if self.inquire_more:
                     useful_links = (
-                        USEFUL_SNAP_LINKS['am_i_eligible'],
-                        USEFUL_SNAP_LINKS['how_to_apply'],
-                        USEFUL_SNAP_LINKS['state_information'],
-                        USEFUL_SNAP_LINKS['when_are_benefits_available'],
-                        USEFUL_SNAP_LINKS['what_can_snap_buy'],
-                        USEFUL_SNAP_LINKS['where_can_i_use_snap_ebt']
+                        self.USEFUL_SNAP_LINKS['am_i_eligible'],
+                        self.USEFUL_SNAP_LINKS['how_to_apply'],
+                        self.USEFUL_SNAP_LINKS['state_information'],
+                        self.USEFUL_SNAP_LINKS['when_are_benefits_available'],
+                        self.USEFUL_SNAP_LINKS['what_can_snap_buy'],
+                        self.USEFUL_SNAP_LINKS['where_can_i_use_snap_ebt']
                     )
                 else:
                     useful_links = (
-                        USEFUL_SNAP_LINKS['am_i_eligible'],
-                        USEFUL_SNAP_LINKS['state_information']
+                        self.USEFUL_SNAP_LINKS['am_i_eligible'],
+                        self.USEFUL_SNAP_LINKS['state_information']
                     )
 
                 body = body + "{}, {}".join([(idx, link) for idx, link in enumerate(useful_links, start=1)])
