@@ -18,8 +18,17 @@ class SnapResourceSkill(MycroftSkill):
 
     def __init__(self):
         MycroftSkill.__init__(self)
-        print(self.settings.get('twilio_account_sid'))
-        self.client = Client(self.settings.get('twilio_account_sid'), self.settings.get('twilio_auth_token'))
+        self._client = None
+
+    def try_load_client(self):
+        if not self.settings.get("twilio_integration_enabled"):
+            return None
+
+        if not self._client:
+            if self.settings.get('twilio_account_sid') and self.settings.get('twilio_auth_token'):
+                self._client = Client(self.settings.get('twilio_account_sid'), self.settings.get('twilio_auth_token'))
+
+        return self._client
 
     @intent_file_handler('snap.eligibility.intent')
     def handle_resources_snap(self, message):
@@ -33,7 +42,7 @@ class SnapResourceSkill(MycroftSkill):
         wait_while_speaking()
 
         if is_yes(eligibility_info):
-            if self.settings.get('twilio_integration_enabled') and self.client:
+            if self.settings.get('twilio_integration_enabled') and self.try_load_client():
                 self.record_info = self.ask_yesno('text')
             else:
                 self.record_info = "no"
