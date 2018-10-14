@@ -148,7 +148,7 @@ class SnapResourceSkill(MycroftSkill):
             self.speak_dialog('here.to.assist')
             wait_while_speaking()
 
-        if client:
+        if is_yes(self.record_info) and client:
             messageid = client.messages.create(from_=self.settings.get('twilio_from_number'), to=self.phone_number, body=str(self.message_log))
 
         if is_yes(self.record_info) and self.settings.get("send_report_on_completion"):
