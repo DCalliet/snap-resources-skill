@@ -15,6 +15,14 @@ class SnapResourceSkill(MycroftSkill):
 
         Am I eligible for food stamps?
     '''
+    USEFUL_SNAP_LINKS = {
+        'am_i_eligible': 'https://www.fns.usda.gov/snap/eligibility',
+        'how_to_apply': 'https://www.fns.usda.gov/snap/apply',
+        'state_information': 'https://www.fns.usda.gov/snap/snap-application-and-local-office-locators',
+        'when_are_benefits_available': 'https://www.fns.usda.gov/snap/snap-monthly-benefit-issuance-schedule',
+        'what_can_snap_buy': 'https://www.fns.usda.gov/snap/eligible-food-items',
+        'where_can_i_use_snap_ebt': 'https://www.fns.usda.gov/snap/retailerlocator'
+    }
 
     def __init__(self):
         MycroftSkill.__init__(self)
@@ -73,8 +81,24 @@ class SnapResourceSkill(MycroftSkill):
                         self.speak_dialog('generic.no')
 
             if is_yes(self.record_info) and self.phone_number:
-                body = "Please visit: https://www.fns.usda.gov/snap/eligibility for more details."
+                body = "We've attached some useful links: "
 
+                if self.inquire_more:
+                    useful_links = (
+                        USEFUL_SNAP_LINKS['am_i_eligible'],
+                        USEFUL_SNAP_LINKS['how_to_apply'],
+                        USEFUL_SNAP_LINKS['state_information'],
+                        USEFUL_SNAP_LINKS['when_are_benefits_available'],
+                        USEFUL_SNAP_LINKS['what_can_snap_buy'],
+                        USEFUL_SNAP_LINKS['where_can_i_use_snap_ebt']
+                    )
+                else:
+                    useful_links = (
+                        USEFUL_SNAP_LINKS['am_i_eligible'],
+                        USEFUL_SNAP_LINKS['state_information']
+                    )
+
+                body = body + "{}, {}".join([(idx, link) for idx, link in enumerate(useful_links, start=1)])
                 client = self.try_load_client()
 
                 if client:
