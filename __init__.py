@@ -78,6 +78,7 @@ class SnapResourceSkill(MycroftSkill):
     def handle_resources_snap(self, message):
         is_yes = lambda x: (x == "yes")
         is_no = lambda x: (x == "no")
+
         self.speak_dialog('intro.snap.eligibility')
         wait_while_speaking()
 
@@ -144,31 +145,29 @@ class SnapResourceSkill(MycroftSkill):
                 data = { idx: link for idx, link in enumerate(useful_links, start=1) }
                 self.message_log.add_lines(data, "- ", ",")
 
+            if is_yes(self.record_info) and client:
+                messageid = client.messages.create(from_=self.settings.get('twilio_from_number'), to=self.phone_number, body=str(self.message_log))
+
+            if is_yes(self.record_info) and self.settings.get("send_report_on_completion"):
+
+                email_message_log = MessageLog()
+                email_message_log.add_lines({ 'introduction': self.name }, 'A new client, ', ', has inquired about Social Security Eligibility.')
+                email_message_log.add_lines({ 'are_they_eligible': "" }, 'Assistance may be needed to see if they are' if self.inquire_more else 'Unfortunately they are not', ' currently eligible for the SNAP Program.')
+                email_message_log.add_lines({ 'phone_number': self.phone }, 'An active phone number for {} is: '.format(self.name), '.')
+
+                sender = self.settings.get("internal_communications_email")
+                password = self.settings.get("internal_communications_pw")
+                recepient = self.settings.get("recipient_service_worker_email")
+
+                message_body = str(email_message_log)
+
+                smtp_server = smtplib.SMTP_SSL('mail.tree.industries', 465)
+                smtp_server.login(sender, password)
+                smtp_server.sendmail(sender, recepient, message_body)
+                smtp_server.close()
         else:
             self.speak_dialog('here.to.assist')
             wait_while_speaking()
-
-        if is_yes(self.record_info) and client:
-            messageid = client.messages.create(from_=self.settings.get('twilio_from_number'), to=self.phone_number, body=str(self.message_log))
-
-        if is_yes(self.record_info) and self.settings.get("send_report_on_completion"):
-
-            email_message_log = MessageLog()
-            email_message_log.add_lines({ 'introduction': self.name }, 'A new client, ', ', has inquired about Social Security Eligibility.')
-            email_message_log.add_lines({ 'are_they_eligible': "" }, 'Assistance may be needed to see if they are' if self.inquire_more else 'Unfortunately they are not', ' currently eligible for the SNAP Program.')
-            email_message_log.add_lines({ 'phone_number': self.phone }, 'An active phone number for {} is: '.format(self.name), '.')
-
-            sender = self.settings.get("internal_communications_email")
-            password = self.settings.get("internal_communications_pw")
-            recepient = self.settings.get("recipient_service_worker_email")
-
-            message_body = str(email_message_log)
-
-            smtp_server = smtplib.SMTP_SSL('mail.tree.industries', 465)
-            smtp_server.login(sender, password)
-            smtp_server.sendmail(sender, recepient, message_body)
-            smtp_server.close()
-
 
 def create_skill():
     return SnapResourceSkill()
