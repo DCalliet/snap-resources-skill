@@ -75,7 +75,10 @@ class SnapResourceSkill(MycroftSkill):
             if is_yes(self.record_info) and self.phone_number:
                 body = "Please visit: https://www.fns.usda.gov/snap/eligibility for more details"
 
-                messageid = self.client.messages.create(from_=self.settings.get('twilio_from_number'), to=self.phone_number, body=body)
+                client = self.try_load_client()
+
+                if client:
+                    messageid = client.messages.create(from_=self.settings.get('twilio_from_number'), to=self.phone_number, body=body)
 
         else:
             self.speak_dialog('here.to.assist')
