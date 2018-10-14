@@ -16,25 +16,25 @@ class MessageLog():
         self._prefixes = {}
         self._suffixes = {}
         self._params = {}
-        self._seperator = seperator
+        self.seperator = seperator
         self._order = []
 
     def add_lines(self, data=None, prefix='', suffix=''):
         if not data:
             data = {}
 
-        self.params.update(data)
+        self._params.update(data)
         for key in data.keys():
-            self.prefixes.update({
+            self._prefixes.update({
                 key: prefix
             })
-            self.suffixes.update({
+            self._suffixes.update({
                 key: suffix
             })
-            self.order.append(key)
+            self._order.append(key)
 
     def __str__(self):
-        lines = [(self.prefixes[x], self.params[x], self.suffixes[x]) for x in self._order]
+        lines = [(self._prefixes[x], self._params[x], self._suffixes[x]) for x in self._order]
         return self.seperator.join(["{}{}{}".format(prefix, value, suffix) for prefix, value, suffix in lines])
 
 
