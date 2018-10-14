@@ -78,7 +78,6 @@ class SnapResourceSkill(MycroftSkill):
 
         return self._client
 
-
     def _collect_contact_info(self):
         if self.settings.get('twilio_integration_enabled') and self.try_load_client():
             self.record_info = self.ask_yesno('text')
@@ -101,9 +100,6 @@ class SnapResourceSkill(MycroftSkill):
                 if not self.phone_number:
                     self.phone_number = self.get_response('ask.phone.number')
                     wait_while_speaking()
-
-
-
 
     @intent_file_handler('snap.list.eligibility.intent')
     def handle_snap_list(self, message):
