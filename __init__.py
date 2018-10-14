@@ -183,7 +183,7 @@ class SnapResourceSkill(MycroftSkill):
                     )
                 else:
                     useful_links = (
-                        , self.USEFUL_SNAP_LINKS['state_information']
+                        self.USEFUL_SNAP_LINKS['state_information'],
                     )
 
                 data = { idx: link for idx, link in enumerate(useful_links, start=1) }
