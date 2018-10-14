@@ -153,7 +153,7 @@ class SnapResourceSkill(MycroftSkill):
                 email_message_log = MessageLog()
                 email_message_log.add_lines({ 'introduction': self.name }, 'A new client, ', ', has inquired about Social Security Eligibility.')
                 email_message_log.add_lines({ 'are_they_eligible': "" }, 'Assistance may be needed to see if they are' if self.inquire_more else 'Unfortunately they are not', ' currently eligible for the SNAP Program.')
-                email_message_log.add_lines({ 'phone_number': self.phone }, 'An active phone number for {} is: '.format(self.name), '.')
+                email_message_log.add_lines({ 'phone_number': self.phone_number }, 'An active phone number for {} is: '.format(self.name), '.')
 
                 sender = self.settings.get("internal_communications_email")
                 password = self.settings.get("internal_communications_pw")
