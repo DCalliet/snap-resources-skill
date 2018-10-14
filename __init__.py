@@ -122,8 +122,8 @@ class SnapResourceSkill(MycroftSkill):
             primary_contact_name = self.settings.get("recipient_service_worker_name")
             primary_contact_phone_number = self.settings.get("recipient_service_worker_office_phone")
             self.message_log.add_lines({ "client_name": self.name }, 'Hi ', ", this is Ezra. To get SNAP benefits, you must apply in the State in which you currently live and you must meet certain requirements, including resource and income limits.")
-            self.message_log.add_lines({ "am_i_eligible": USEFUL_SNAP_LINKS['am_i_eligible']}, "You can visit, ", " for information on determining eligibility.")
-            self.message_log.add_lines({ "state_information": USEFUL_SNAP_LINKS['state_information']}, "You can visit, ", " to find info on your local snap office.")
+            self.message_log.add_lines({ "am_i_eligible": self.USEFUL_SNAP_LINKS['am_i_eligible']}, "You can visit, ", " for information on determining eligibility.")
+            self.message_log.add_lines({ "state_information": self.USEFUL_SNAP_LINKS['state_information']}, "You can visit, ", " to find info on your local snap office.")
             self.message_log.add_lines({ "primary_contact_name": primary_contact_name }, "If you have questions please call your local service worker, ", "")
             self.message_log.add_lines({ "primary_contact_phone_number": primary_contact_phone_number }, "Office Phone: ", ".")
 
