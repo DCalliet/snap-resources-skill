@@ -7,7 +7,7 @@ from twilio.rest import Client
 
 import time
 
-class MessageLog(Object):
+class MessageLog():
     def __init__(self, message='', seperator='\n'):
         self.body = message
         self.prefixes = {}
