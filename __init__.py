@@ -18,7 +18,7 @@ class SnapResourceSkill(MycroftSkill):
 
     def __init__(self):
         MycroftSkill.__init__(self)
-        print self.settings.get('twilio_account_sid'), self.settings.get('twilio_auth_token')
+        print(self.settings.get('twilio_account_sid'))
         self.client = Client(self.settings.get('twilio_account_sid'), self.settings.get('twilio_auth_token'))
 
     @intent_file_handler('snap.eligibility.intent')
