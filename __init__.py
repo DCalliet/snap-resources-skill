@@ -73,7 +73,7 @@ class SnapResourceSkill(MycroftSkill):
                         self.speak_dialog('generic.no')
 
             if is_yes(self.record_info) and self.phone_number:
-                body = "Please visit: https://www.fns.usda.gov/snap/eligibility for more details"
+                body = "Please visit: https://www.fns.usda.gov/snap/eligibility for more details."
 
                 client = self.try_load_client()
 
