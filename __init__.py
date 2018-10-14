@@ -99,7 +99,7 @@ class SnapResourceSkill(MycroftSkill):
                 self.name = self.get_response('ask.name')
                 wait_while_speaking()
 
-                self.message_log.add_line({ "client_name": self.name }, 'Hi ', ", this is Ezra. I'm sending along some useful information!" )
+                self.message_log.add_lines({ "client_name": self.name }, 'Hi ', ", this is Ezra. I'm sending along some useful information!" )
 
                 self.phone_number = self.get_response('ask.phone.number')
                 wait_while_speaking()
