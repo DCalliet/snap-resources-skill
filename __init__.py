@@ -15,12 +15,12 @@ class MessageLog():
         self.params = {}
         self.seperator = seperator
 
-    def add_line(self, data=None, prefix='', suffix=''):
+    def add_lines(self, data=None, prefix='', suffix=''):
         if not data:
             data = {}
 
         self.params.update(data)
-        for key, value in data:
+        for key in data.keys():
             self.prefixes.update({
                 key: prefix
             })
@@ -31,7 +31,6 @@ class MessageLog():
     def __str__(self):
         lines = [(self.prefixes[x], self.params[x], self.suffixes[x]) for x in self.params.keys()]
         return self.seperator.join(["{}{}{}".format(prefix, value, suffix) for prefix, value, suffix in lines])
-
 
 
 class SnapResourceSkill(MycroftSkill):
@@ -91,7 +90,7 @@ class SnapResourceSkill(MycroftSkill):
                 self.name = self.get_response('ask.name')
                 wait_while_speaking()
 
-                self.message_log.add_line({ "introduction_name": self.name }, 'Hi ', ", this is Ezra. I'm sending along some useful information!" )
+                self.message_log.add_line({ "client_name": self.name }, 'Hi ', ", this is Ezra. I'm sending along some useful information!" )
 
                 self.phone_number = self.get_response('ask.phone.number')
                 wait_while_speaking()
@@ -117,7 +116,6 @@ class SnapResourceSkill(MycroftSkill):
                         self.speak_dialog('generic.no')
 
             if is_yes(self.record_info) and self.phone_number:
-
                 if self.inquire_more:
                     useful_links = (
                         self.USEFUL_SNAP_LINKS['am_i_eligible'],
@@ -133,18 +131,21 @@ class SnapResourceSkill(MycroftSkill):
                         self.USEFUL_SNAP_LINKS['state_information']
                     )
 
-                for idx, link in enumerate(useful_links, start=1):
-                    line_id = 'useful_link_{}'.format(idx)
-                    self.message_log.add_line({line_id: link}, "{}:".format(idx), "")
+                data = { idx: link for idx, link in enumerate(useful_links, start=1) }
+                self.message_log.add_lines(data, "- ", ",")
 
-                    client = self.try_load_client()
-
-                if client:
-                    messageid = client.messages.create(from_=self.settings.get('twilio_from_number'), to=self.phone_number, body=str(self.message_log))
+                client = self.try_load_client()
 
         else:
             self.speak_dialog('here.to.assist')
             wait_while_speaking()
+
+        if client:
+            messageid = client.messages.create(from_=self.settings.get('twilio_from_number'), to=self.phone_number, body=str(self.message_log))
+
+        if is_yes(self.record_info) and self.settings.get("send_report_on_completion"):
+            email = self.settings.get("internal_communications_email_address")
+            pw = self.settings.get("internal_communications_pw")
 
 
 

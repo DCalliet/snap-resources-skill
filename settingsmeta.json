@@ -17,6 +17,13 @@
                       "label": "Internal Email Address to Receive Reports",
                       "value": "",
                       "placeholder": "example@email.com"
+                  },
+                  {
+                    "name": "internal_communications_pw",
+                    "type": "password",
+                    "label": "Gmail SMTP Password",
+                    "value": "",
+                    "placeholder": "****"
                   }
                 ]
             },
