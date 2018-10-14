@@ -68,7 +68,7 @@ class SnapResourceSkill(MycroftSkill):
         self.message_log = MessageLog()
 
     def try_load_client(self):
-        print self.settings.get("twilio_integration_enabled", False)
+        print(self.settings.get("twilio_integration_enabled", False))
         if not self.settings.get("twilio_integration_enabled", False):
             return None
 
