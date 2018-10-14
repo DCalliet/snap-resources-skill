@@ -138,6 +138,7 @@ class SnapResourceSkill(MycroftSkill):
     @intent_file_handler('snap.test.eligibility.intent')
     def handle_snap_test(self, message):
         self.message_log = MessageLog()
+        self.inquire_more = False
 
         self.speak_dialog('intro.snap.eligibility')
         wait_while_speaking()
@@ -169,7 +170,6 @@ class SnapResourceSkill(MycroftSkill):
                         self.inquire_more = True
                         self.speak_dialog('generic.yes')
                     else:
-                        self.inquire_more = False
                         self.speak_dialog('generic.no')
 
             if is_yes(self.record_info) and self.phone_number:
