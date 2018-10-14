@@ -98,7 +98,7 @@ class SnapResourceSkill(MycroftSkill):
                         self.USEFUL_SNAP_LINKS['state_information']
                     )
 
-                body = body + "{}, {}".join([(idx, link) for idx, link in enumerate(useful_links, start=1)])
+                body = body + ", ".join(["{}: {}".format(idx, link) for idx, link in enumerate(useful_links, start=1)])
                 client = self.try_load_client()
 
                 if client:
