@@ -6,14 +6,18 @@ from mycroft.skills.context import *
 from twilio.rest import Client
 
 import time
+import os
+import smtplib
+
+import socket
 
 class MessageLog():
-    def __init__(self, message='', seperator='\n'):
-        self.body = message
-        self.prefixes = {}
-        self.suffixes = {}
-        self.params = {}
-        self.seperator = seperator
+    def __init__(self, seperator='\n'):
+        self._prefixes = {}
+        self._suffixes = {}
+        self._params = {}
+        self._seperator = seperator
+        self._order = []
 
     def add_lines(self, data=None, prefix='', suffix=''):
         if not data:
@@ -27,9 +31,10 @@ class MessageLog():
             self.suffixes.update({
                 key: suffix
             })
+            self.order.append(key)
 
     def __str__(self):
-        lines = [(self.prefixes[x], self.params[x], self.suffixes[x]) for x in self.params.keys()]
+        lines = [(self.prefixes[x], self.params[x], self.suffixes[x]) for x in self._order]
         return self.seperator.join(["{}{}{}".format(prefix, value, suffix) for prefix, value, suffix in lines])
 
 
@@ -52,6 +57,10 @@ class SnapResourceSkill(MycroftSkill):
 
     def __init__(self):
         MycroftSkill.__init__(self)
+
+        socket.setdefaulttimeout(20)
+
+
         self._client = None
         self.message_log = MessageLog()
 
@@ -144,9 +153,22 @@ class SnapResourceSkill(MycroftSkill):
             messageid = client.messages.create(from_=self.settings.get('twilio_from_number'), to=self.phone_number, body=str(self.message_log))
 
         if is_yes(self.record_info) and self.settings.get("send_report_on_completion"):
-            email = self.settings.get("internal_communications_email_address")
-            pw = self.settings.get("internal_communications_pw")
 
+            email_message_log = MessageLog()
+            email_message_log.add_lines({ 'introduction': self.name }, 'A new client, ', ', has inquired about Social Security Eligibility.')
+            email_message_log.add_lines({ 'are_they_eligible': "" }, 'Assistance may be needed to see if they are' if self.inquire_more else 'Unfortunately they are not', ' currently eligible for the SNAP Program.')
+            email_message_log.add_lines({ 'phone_number': self.phone }, 'An active phone number for {} is: '.format(self.name), '.')
+
+            sender = self.settings.get("internal_communications_email")
+            password = self.settings.get("internal_communications_pw")
+            recepient = self.settings.get("recipient_service_worker_email")
+
+            message_body = str(email_message_log)
+
+            smtp_server = smtplib.SMTP_SSL('mail.tree.industries', 465)
+            smtp_server.login(sender, password)
+            smtp_server.sendmail(sender, recepient, message_body)
+            smtp_server.close()
 
 
 def create_skill():

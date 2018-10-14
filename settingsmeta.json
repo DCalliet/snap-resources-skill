@@ -12,9 +12,9 @@
                       "value": "true"
                   },
                   {
-                      "name": "internal_communications_email_address",
+                      "name": "internal_communications_email",
                       "type": "text",
-                      "label": "Internal Email Address to Receive Reports",
+                      "label": "Internal Email Address to Send Dispatch Emails",
                       "value": "",
                       "placeholder": "example@email.com"
                   },
@@ -24,6 +24,13 @@
                     "label": "Gmail SMTP Password",
                     "value": "",
                     "placeholder": "****"
+                  },
+                  {
+                    "name": "recipient_service_worker_emai",
+                    "type": "text",
+                    "label": "Email Address of Designated Recipient",
+                    "value": "",
+                    "placeholder": "example@gmail.com"
                   }
                 ]
             },
