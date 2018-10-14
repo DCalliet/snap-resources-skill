@@ -11,6 +11,9 @@ import smtplib
 
 import socket
 
+is_yes = lambda x: (x == "yes")
+is_no = lambda x: (x == "no")
+
 class MessageLog():
     def __init__(self, seperator='\n'):
         self._prefixes = {}
@@ -73,21 +76,27 @@ class SnapResourceSkill(MycroftSkill):
                 self._client = Client(self.settings.get('twilio_account_sid'), self.settings.get('twilio_auth_token'))
 
         return self._client
-
-    @intent_file_handler('snap.eligibility.intent')
-    def handle_resources_snap(self, message):
-        is_yes = lambda x: (x == "yes")
-        is_no = lambda x: (x == "no")
-
+    @intent_file_handler('snap.list.eligibility.intent')
+    def handle_snap_list(self, message):
         self.speak_dialog('intro.snap.eligibility')
         wait_while_speaking()
 
         time.sleep(3)
-        eligibility_info = self.ask_yesno('ask.snap.eligibility.detailed')
+        detailed_inquiry = self.ask_yesno('ask.snap.eligibility.detailed')
         client = self.try_load_client()
         wait_while_speaking()
 
-        if is_yes(eligibility_info):
+    @intent_file_handler('snap.test.eligibility.intent')
+    def handle_snap_test(self, message):
+        self.speak_dialog('intro.snap.eligibility')
+        wait_while_speaking()
+
+        time.sleep(3)
+        detailed_inquiry = self.ask_yesno('ask.snap.eligibility.detailed')
+        client = self.try_load_client()
+        wait_while_speaking()
+
+        if is_yes(detailed_inquiry):
             if self.settings.get('twilio_integration_enabled') and client:
                 self.record_info = self.ask_yesno('text')
             else:

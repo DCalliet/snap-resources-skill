@@ -14,7 +14,7 @@
                   {
                       "name": "internal_communications_email",
                       "type": "text",
-                      "label": "Internal Email Address to Send Dispatch Emails",
+                      "label": "Internal Address for Outbound Emails",
                       "value": "",
                       "placeholder": "example@email.com"
                   },
@@ -26,11 +26,21 @@
                     "placeholder": "****"
                   },
                   {
-                    "name": "recipient_service_worker_emai",
+                    "name": "recipient_service_worker_email",
                     "type": "text",
-                    "label": "Email Address of Designated Recipient",
+                    "label": "Email Address for Point of Contact",
                     "value": "",
                     "placeholder": "example@gmail.com"
+                  },
+                  {
+                    "name": "recepient_service_worker_office_phone",
+                    "type": "text",
+                    "label": "Office Phone for Point of Contact"
+                  },
+                  {
+                    "name": "recipient_service_worker_name",
+                    "type": "text",
+                    "label": "Name of Point of Contact"
                   }
                 ]
             },
