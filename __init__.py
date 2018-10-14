@@ -81,12 +81,13 @@ class SnapResourceSkill(MycroftSkill):
         self.speak_dialog('intro.snap.eligibility')
         wait_while_speaking()
 
-        time.sleep(5)
+        time.sleep(3)
         eligibility_info = self.ask_yesno('ask.snap.eligibility.detailed')
+        client = self.try_load_client()
         wait_while_speaking()
 
         if is_yes(eligibility_info):
-            if self.settings.get('twilio_integration_enabled') and self.try_load_client():
+            if self.settings.get('twilio_integration_enabled') and client:
                 self.record_info = self.ask_yesno('text')
             else:
                 self.record_info = "no"
@@ -142,8 +143,6 @@ class SnapResourceSkill(MycroftSkill):
 
                 data = { idx: link for idx, link in enumerate(useful_links, start=1) }
                 self.message_log.add_lines(data, "- ", ",")
-
-                client = self.try_load_client()
 
         else:
             self.speak_dialog('here.to.assist')
