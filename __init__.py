@@ -175,16 +175,13 @@ class SnapResourceSkill(MycroftSkill):
             if is_yes(self.record_info) and self.phone_number:
                 if self.inquire_more:
                     useful_links = (
-                        self.USEFUL_SNAP_LINKS['am_i_eligible'],
                         self.USEFUL_SNAP_LINKS['how_to_apply'],
                         self.USEFUL_SNAP_LINKS['state_information'],
-                        self.USEFUL_SNAP_LINKS['when_are_benefits_available'],
                         self.USEFUL_SNAP_LINKS['what_can_snap_buy'],
                         self.USEFUL_SNAP_LINKS['where_can_i_use_snap_ebt']
                     )
                 else:
                     useful_links = (
-                        self.USEFUL_SNAP_LINKS['am_i_eligible'],
                         self.USEFUL_SNAP_LINKS['state_information']
                     )
 
