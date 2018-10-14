@@ -17,7 +17,7 @@
                       "label": "Internal Email Address to Receive Reports",
                       "value": "",
                       "placeholder": "example@email.com"
-                  },
+                  }
                 ]
             },
             {
