@@ -33,7 +33,7 @@
                     "placeholder": "example@gmail.com"
                   },
                   {
-                    "name": "recepient_service_worker_office_phone",
+                    "name": "recipient_service_worker_office_phone",
                     "type": "text",
                     "label": "Office Phone for Point of Contact"
                   },

@@ -76,18 +76,38 @@ class SnapResourceSkill(MycroftSkill):
                 self._client = Client(self.settings.get('twilio_account_sid'), self.settings.get('twilio_auth_token'))
 
         return self._client
+
+
+    def _collect_contact_info(self):
+        if self.settings.get('twilio_integration_enabled') and self.try_load_client():
+            self.record_info = self.ask_yesno('text')
+        else:
+            self.record_info = "no"
+
+        self.name = "friend"
+        self.phone_number = None
+
+        if is_yes(self.record_info):
+            self.speak_dialog('success')
+            if self.name == "friend" or not self.phone_number:
+                self.speak_dialog('intro.collect.information')
+                time.sleep(3)
+
+                if self.name == "friend":
+                    self.name = self.get_response('ask.name')
+                    wait_while_speaking()
+
+                if not self.phone_number:
+                    self.phone_number = self.get_response('ask.phone.number')
+                    wait_while_speaking()
+
+
+
+
     @intent_file_handler('snap.list.eligibility.intent')
     def handle_snap_list(self, message):
-        self.speak_dialog('intro.snap.eligibility')
-        wait_while_speaking()
+        self.message_log = MessageLog()
 
-        time.sleep(3)
-        detailed_inquiry = self.ask_yesno('ask.snap.eligibility.detailed')
-        client = self.try_load_client()
-        wait_while_speaking()
-
-    @intent_file_handler('snap.test.eligibility.intent')
-    def handle_snap_test(self, message):
         self.speak_dialog('intro.snap.eligibility')
         wait_while_speaking()
 
@@ -97,23 +117,40 @@ class SnapResourceSkill(MycroftSkill):
         wait_while_speaking()
 
         if is_yes(detailed_inquiry):
-            if self.settings.get('twilio_integration_enabled') and client:
-                self.record_info = self.ask_yesno('text')
-            else:
-                self.record_info = "no"
+            self._collect_contact_info()
 
-            if is_yes(self.record_info):
+            primary_contact_name = self.settings.get("recipient_service_worker_name")
+            primary_contact_phone_number = self.settings.get("recipient_service_worker_office_phone")
+            self.message_log.add_lines({ "client_name": self.name }, 'Hi ', ", this is Ezra. To get SNAP benefits, you must apply in the State in which you currently live and you must meet certain requirements, including resource and income limits.")
+            self.message_log.add_lines({ "am_i_eligible": USEFUL_SNAP_LINKS['am_i_eligible']}, "You can visit, ", " for information on determining eligibility.")
+            self.message_log.add_lines({ "state_information": USEFUL_SNAP_LINKS['state_information']}, "You can visit, ", " to find info on your local snap office.")
+            self.message_log.add_lines({ "primary_contact_name": primary_contact_name }, "If you have questions please call your local service worker, ", "")
+            self.message_log.add_lines({ "primary_contact_phone_number": primary_contact_phone_number }, "Office Phone: ", ".")
+
+            if is_yes(self.record_info) and client and self.phone_number:
                 self.speak_dialog('success')
-                self.speak_dialog('intro.collect.information')
-                time.sleep(3)
+                messageid = client.messages.create(from_=self.settings.get('twilio_from_number'), to=self.phone_number, body=str(self.message_log))
+            else:
+                self.speak_dialog('recite.website')
 
-                self.name = self.get_response('ask.name')
-                wait_while_speaking()
+            self.speak_dialog('refer.to.primary.contact', data={'primary_contact_name': primary_contact_name, 'primary_contact_phone_number': primary_contact_phone_number})
 
-                self.message_log.add_lines({ "client_name": self.name }, 'Hi ', ", this is Ezra. I'm sending along some useful information!" )
+    @intent_file_handler('snap.test.eligibility.intent')
+    def handle_snap_test(self, message):
+        self.message_log = MessageLog()
 
-                self.phone_number = self.get_response('ask.phone.number')
-                wait_while_speaking()
+        self.speak_dialog('intro.snap.eligibility')
+        wait_while_speaking()
+
+        time.sleep(3)
+        detailed_inquiry = self.ask_yesno('ask.snap.eligibility.detailed')
+        client = self.try_load_client()
+        wait_while_speaking()
+
+        if is_yes(detailed_inquiry):
+            self._collect_contact_info()
+
+            self.message_log.add_lines({ "client_name": self.name }, 'Hi ', ", this is Ezra. I'm sending along some useful information!" )
 
             self.citizen = self.ask_yesno('citizen')
             wait_while_speaking()
