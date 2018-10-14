@@ -7,6 +7,33 @@ from twilio.rest import Client
 
 import time
 
+class MessageLog(Object):
+    def __init__(self, message='', seperator='\n'):
+        self.body = message
+        self.prefixes = {}
+        self.suffixes = {}
+        self.params = {}
+        self.seperator = seperator
+
+    def add_line(self, data=None, prefix='', suffix=''):
+        if not data:
+            data = {}
+
+        self.params.update(data)
+        for key, value in data:
+            self.prefixes.update({
+                key: prefix
+            })
+            self.suffixes.update({
+                key: suffix
+            })
+
+    def __str__(self):
+        lines = [(self.prefixes[x], self.params[x], self.suffixes[x]) for x in self.params.keys()]
+        return self.seperator.join(["{}{}{}".format(prefix, value, suffix) for prefix, value, suffix in lines])
+
+
+
 class SnapResourceSkill(MycroftSkill):
     '''
         This skill has a dialogue for determining snap eligibility.
@@ -27,6 +54,7 @@ class SnapResourceSkill(MycroftSkill):
     def __init__(self):
         MycroftSkill.__init__(self)
         self._client = None
+        self.message_log = MessageLog()
 
     def try_load_client(self):
         if not self.settings.get("twilio_integration_enabled"):
@@ -57,6 +85,14 @@ class SnapResourceSkill(MycroftSkill):
 
             if is_yes(self.record_info):
                 self.speak_dialog('success')
+                self.speak_dialog('intro.collect.information')
+                time.sleep(3)
+
+                self.name = self.get_response('ask.name')
+                wait_while_speaking()
+
+                self.message_log.add_line({ "introduction_name": self.name }, 'Hi ', ", this is Ezra. I'm sending along some useful information!" )
+
                 self.phone_number = self.get_response('ask.phone.number')
                 wait_while_speaking()
 
@@ -81,7 +117,6 @@ class SnapResourceSkill(MycroftSkill):
                         self.speak_dialog('generic.no')
 
             if is_yes(self.record_info) and self.phone_number:
-                body = "We've attached some useful links: "
 
                 if self.inquire_more:
                     useful_links = (
@@ -98,11 +133,14 @@ class SnapResourceSkill(MycroftSkill):
                         self.USEFUL_SNAP_LINKS['state_information']
                     )
 
-                body = body + ", ".join(["{}: {}".format(idx, link) for idx, link in enumerate(useful_links, start=1)])
-                client = self.try_load_client()
+                for idx, link in enumerate(useful_links, start=1):
+                    line_id = 'useful_link_{}'.format(idx)
+                    self.message_log.add_line({line_id: link}, "{}:".format(idx), "")
+
+                    client = self.try_load_client()
 
                 if client:
-                    messageid = client.messages.create(from_=self.settings.get('twilio_from_number'), to=self.phone_number, body=body)
+                    messageid = client.messages.create(from_=self.settings.get('twilio_from_number'), to=self.phone_number, body=str(self.message_log))
 
         else:
             self.speak_dialog('here.to.assist')
