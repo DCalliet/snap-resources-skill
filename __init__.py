@@ -18,6 +18,7 @@ class SnapResourceSkill(MycroftSkill):
 
     def __init__(self):
         MycroftSkill.__init__(self)
+        print self.settings.get('twilio_account_sid'), self.settings.get('twilio_auth_token')
         self.client = Client(self.settings.get('twilio_account_sid'), self.settings.get('twilio_auth_token'))
 
     @intent_file_handler('snap.eligibility.intent')
@@ -64,7 +65,7 @@ class SnapResourceSkill(MycroftSkill):
 
             if is_yes(self.record_info) and self.phone_number:
                 body = "Please visit: https://www.fns.usda.gov/snap/eligibility for more details"
-                
+
                 messageid = self.client.messages.create(from_=self.settings.get('twilio_from_number'), to=self.phone_number, body=body)
 
         else:
